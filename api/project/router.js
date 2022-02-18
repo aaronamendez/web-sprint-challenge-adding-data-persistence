@@ -5,7 +5,14 @@ const Projects = require('./model');
 
 projectsRouter.get('/', (req, res) => {
 	Projects.find().then((projects) => {
-		res.status(200).json(projects);
+		let newArray = [];
+		projects.map((project) => {
+			newArray.push({
+				...project,
+				project_completed: Boolean(project.project_completed),
+			});
+		});
+		res.status(200).json(newArray);
 	});
 });
 
@@ -21,7 +28,7 @@ projectsRouter.post('/', (req, res) => {
 		if (!project_completed) {
 			obj.project_completed = false;
 		}
-		console.log(obj);
+
 		Projects.create(obj).then((project) => {
 			res.status(201).json(project);
 		});
